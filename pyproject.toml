@@ -41,4 +41,9 @@ ccxToVTU = "ccx2paraview.cli:ccx_to_vtu"
 [tool.setuptools-git-versioning]
 enabled = true
 
+[tool.setuptools.packages.find]
+where = ["ccx2paraview"]  # list of folders that contain the packages (["."] by default)
+namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
+
+[tool.setuptools]
 py-modules = ["__init__"]
