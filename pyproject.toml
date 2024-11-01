@@ -47,4 +47,4 @@ namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.setuptools]
 packages = ["ccx2paraview"]
-py-modules = ["__init__", "__main__"] # dash, not underscore
+py-modules = ["__init__"] # dash, not underscore
