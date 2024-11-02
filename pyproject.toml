@@ -46,4 +46,4 @@ where = ["ccx2paraview"]  # list of folders that contain the packages (["."] by 
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)
 
 [tool.setuptools]
-py-modules = ["__init__"] # dash, not underscore
+py-modules = ["__main__"] # dash, not underscore
