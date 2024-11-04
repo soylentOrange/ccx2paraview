@@ -1,3 +1,5 @@
+"""required for nuitka build"""
+
 from . import cli
 
 cli.clean_screen()
