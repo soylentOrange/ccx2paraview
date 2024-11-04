@@ -10,13 +10,13 @@ analysis results in Paraview. Generates Mises and
 Principal components for stress and strain tensors.
 """
 
-from .common import Converter
-
 # Standard imports
 import argparse
 import logging
 import os
 
+# local import
+from .common import Converter
 
 def clean_screen():
     """Clean screen."""
@@ -24,6 +24,7 @@ def clean_screen():
 
 
 def filename_type(filename):
+    """Check for .frd filename."""
     if not os.path.isfile(filename):
         raise argparse.ArgumentTypeError("The given file doesn't exist.")
     if not os.path.splitext(filename)[1].lower() == ".frd":
@@ -32,6 +33,7 @@ def filename_type(filename):
 
 
 def main():
+    """Create and run converter."""
     # Configure logging
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -47,6 +49,7 @@ def main():
 
 
 def main_with_format(format):
+    """Create and run converter with format fixed."""
     # Configure logging
     logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
@@ -61,10 +64,12 @@ def main_with_format(format):
 
 
 def ccx_to_vtk():
+    """Create and run vtk converter."""
     main_with_format("vtk")
 
 
 def ccx_to_vtu():
+    """Create and run vtu converter."""
     main_with_format("vtu")
 
 
