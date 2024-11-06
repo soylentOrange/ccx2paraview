@@ -1,16 +1,73 @@
 CONVERTER TEST
-INFO: Reading beam.frd
-INFO: 4403 nodes
-INFO: 2340 cells
-INFO: 1 time increment
-INFO: Step 1, time 1.0, U, 3 components, 4403 values
-INFO: Step 1, time 1.0, S, 6 components, 4403 values
-INFO: Step 1, time 1.0, S_Mises, 1 components, 4403 values
-INFO: Step 1, time 1.0, S_Principal, 4 components, 4403 values
-INFO: Step 1, time 1.0, RF, 3 components, 4403 values
-INFO: Step 1, time 1.0, ERROR, 1 components, 4403 values
-INFO: Writing beam.vtk
-INFO: Writing beam.vtu
-0m 0.2s
 
-Total 0m 0.2s
+INFO: Reading ball.frd
+INFO: 4812 nodes
+INFO: 2259 cells
+INFO: 8 time increment s
+INFO: step: 1 - inc 0
+INFO: Step 1, time 1.00e-01, U, 3 components, 4812 values
+INFO: Step 1, time 1.00e-01, S, 6 components, 4812 values
+INFO: Step 1, time 1.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 1, time 1.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 1, time 1.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.1.vtk
+INFO: Writing ball.1.vtu
+INFO: step: 2 - inc 0
+INFO: Step 2, time 2.00e-01, U, 3 components, 4812 values
+INFO: Step 2, time 2.00e-01, S, 6 components, 4812 values
+INFO: Step 2, time 2.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 2, time 2.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 2, time 2.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.2.vtk
+INFO: Writing ball.2.vtu
+INFO: step: 3 - inc 0
+INFO: Step 3, time 3.00e-01, U, 3 components, 4812 values
+INFO: Step 3, time 3.00e-01, S, 6 components, 4812 values
+INFO: Step 3, time 3.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 3, time 3.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 3, time 3.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.3.vtk
+INFO: Writing ball.3.vtu
+INFO: step: 4 - inc 0
+INFO: Step 4, time 4.00e-01, U, 3 components, 4812 values
+INFO: Step 4, time 4.00e-01, S, 6 components, 4812 values
+INFO: Step 4, time 4.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 4, time 4.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 4, time 4.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.4.vtk
+INFO: Writing ball.4.vtu
+INFO: step: 5 - inc 0
+INFO: Step 5, time 5.00e-01, U, 3 components, 4812 values
+INFO: Step 5, time 5.00e-01, S, 6 components, 4812 values
+INFO: Step 5, time 5.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 5, time 5.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 5, time 5.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.5.vtk
+INFO: Writing ball.5.vtu
+INFO: step: 6 - inc 0
+INFO: Step 6, time 6.00e-01, U, 3 components, 4812 values
+INFO: Step 6, time 6.00e-01, S, 6 components, 4812 values
+INFO: Step 6, time 6.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 6, time 6.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 6, time 6.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.6.vtk
+INFO: Writing ball.6.vtu
+INFO: step: 7 - inc 0
+INFO: Step 7, time 7.00e-01, U, 3 components, 4812 values
+INFO: Step 7, time 7.00e-01, S, 6 components, 4812 values
+INFO: Step 7, time 7.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 7, time 7.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 7, time 7.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.7.vtk
+INFO: Writing ball.7.vtu
+INFO: step: 8 - inc 0
+INFO: Step 8, time 8.00e-01, U, 3 components, 4812 values
+INFO: Step 8, time 8.00e-01, S, 6 components, 4812 values
+INFO: Step 8, time 8.00e-01, S_Mises, 1 components, 4812 values
+INFO: Step 8, time 8.00e-01, S_Principal, 4 components, 4812 values
+INFO: Step 8, time 8.00e-01, ERROR, 1 components, 4812 values
+INFO: Writing ball.8.vtk
+INFO: Writing ball.8.vtu
+0m 1.1s
+
+Total 0m 1.1s

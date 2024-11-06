@@ -17,11 +17,24 @@ import math
 import re
 
 # External imports
+
+# pyright: reportMissingImports=false
 import numpy as np
 # pylint: disable=no-name-in-module
-from paraview.simple import (SaveData, XMLUnstructuredGridReader)
-from vtk import (vtkUnstructuredGridWriter, vtkXMLUnstructuredGridWriter, \
-                 vtkPoints, vtkCellArray, vtkUnstructuredGrid, vtkDoubleArray)
+# import from vtk
+try:
+    from vtk import (vtkUnstructuredGridWriter, vtkXMLUnstructuredGridWriter, \
+                    vtkPoints, vtkCellArray, vtkUnstructuredGrid, vtkDoubleArray)
+except ImportError as e:
+    e.add_note("Install either vtk ar paraview.")
+    raise ImportError("Module vtk is not available!") from e
+
+# import from paraview.simple - when available
+try:
+    from paraview.simple import (SaveData, XMLUnstructuredGridReader)
+    SUPPORT_HDF = True
+except ImportError:
+    SUPPORT_HDF = False
 # pylint: enable=no-name-in-module
 
 renumbered_nodes = {} # old_number : new_number
@@ -41,7 +54,7 @@ def write_converted_file(file_name, ugrid):
     writer.SetFileName(file_name)
     writer.Write()
 
-
+#
 # Classes and functions for reading CalculiX .frd files.
 
 # pylint: disable-next=too-few-public-methods
@@ -52,12 +65,10 @@ class NodalPointCoordinateBlock:
 
     def __init__(self, in_file):
         """Read nodal coordinates."""
-        # pylint: disable-next=global-variable-not-assigned
-        global renumbered_nodes
         renumbered_nodes.clear()
         self.points = vtkPoints()
-
         new_node_number = 0
+
         while True:
             line = in_file.readline().strip()
 
@@ -81,8 +92,6 @@ class NodalPointCoordinateBlock:
 
     def get_node_numbers(self):
         """get node numbers."""
-        # pylint: disable-next=global-variable-not-assigned
-        global renumbered_nodes
         return sorted(renumbered_nodes.keys())
 
 
@@ -327,7 +336,6 @@ class ElementDefinitionBlock:
     """Element Definition Block: cgx_2.20.pdf Manual, § 11.4.
     Generates vtkCellArray.
     """
-
     def __init__(self, in_file):
         self.in_file = in_file
         self.cells = vtkCellArray()
@@ -356,8 +364,6 @@ class ElementDefinitionBlock:
         -1         3   12    0    2
         -2        10        12        11
         """
-        # pylint: disable-next=global-variable-not-assigned
-        global renumbered_nodes
         # element_num = int(line.split()[1])
         element_type = int(line.split()[2])
         element_nodes = []
@@ -436,14 +442,13 @@ class NodalResultsBlock:
         self.step = 0
         self.line = line
         self.txt = ''
+        self.in_file = None
+        self.node_block = None
 
     def run(self, in_file, node_block):
-        """Run the converter."""
-        # pylint: disable=attribute-defined-outside-init
+        """Run the converter."""        
         self.in_file = in_file
         self.node_block = node_block
-        # pylint: enable=attribute-defined-outside-init
-
         self.inc, self.step = get_inc_step(self.line)
         self.read_vars_info()
         self.read_components_info()
@@ -888,19 +893,31 @@ class Converter:
         self.frd_file_name = frd_file_name
         self.fmt_list = ['.' + fmt.lower() for fmt in fmt_list] # ['.vtk', '.vtu', '.hdf']
         self.encoding = encoding
+        self.frd = None
+
+        # TODO: remove once hdf is working
+        if not SUPPORT_HDF:
+            if '.hdf' in self.fmt_list:
+                self.fmt_list.remove('.hdf')
+                logging.warning('Could not create writer for .vtkhdf-file')
 
     def run(self):
         """Run the Converter."""
+
+        # TODO: remove once hdf is working
+        # check for requested format availability
+        if not self.fmt_list:
+            raise RuntimeError("Could not create writer for .vtkhdf-file")
+
         threads = [] # list of Threads
         logging.info('Reading %s', os.path.basename(self.frd_file_name))
         in_file = open(self.frd_file_name, 'r', encoding = self.encoding)
-        # pylint: disable-next=attribute-defined-outside-init
         self.frd = FRD(in_file)
 
         # Check if file contains mesh data
         self.frd.parse_mesh()
         if not self.frd.has_mesh():
-            return
+            raise TypeError("No mesh found in .inp-file!")
 
         # For each time increment generate separate .vt* file.
         # Output file name will be the same as input but with serial number.
@@ -980,6 +997,7 @@ class Converter:
 
     def write_pvd(self):
         """Writes ParaView Data (PVD) file for series of VTU files."""
+        logging.info('Writing %s', os.path.basename(self.frd_file_name[:-4] + '.pvd'))
         with open(self.frd_file_name[:-4] + '.pvd', 'w', encoding = self.encoding) as f:
             f.write('<?xml version="1.0"?>\n')
             f.write('<VTKFile type="Collection" version="0.1" byte_order="LittleEndian">\n')
@@ -1012,7 +1030,8 @@ class Converter:
             registrationName=os.path.basename(os.path.realpath(self.frd_file_name[:-4]))+'.vtu*',\
                 FileName=vtus_to_include)
         try:
-            SaveData(self.frd_file_name[:-4] + '.vtkhdf', proxy=data_proxy, WriteAllTimeSteps=1)
+            SaveData(self.frd_file_name[:-4] + '.vtkhdf', proxy=data_proxy,\
+                     WriteAllTimeSteps=1, CompressionLevel=4)
         # pylint: disable-next=broad-exception-caught
         except Exception as e:
             logging.error('cannot Save %s', self.frd_file_name[:-4] + '.vtkhdf')
@@ -1030,3 +1049,25 @@ class Converter:
                         logging.error('Cannot delete %s', vtu)
             except TypeError:
                 logging.debug('Nothing to delete after writing hdf-file')
+
+# def SaveData(filename, proxy=None, **extraArgs):
+#     """Save data produced by the `proxy` parameter into a file.
+
+#     Properties to configure the writer can be passed in
+#     as keyword arguments. Example usage::
+
+#         SaveData("sample.pvtp", source0)
+#         SaveData("sample.csv", FieldAssociation="Points")
+
+#     :param filenam: Path where output file should be saved.
+#     :type filename: str
+#     :param proxy: Proxy to save. Optional, defaults to saving the active source.
+#     :type proxy: Source proxy.
+#     :param extraArgs: A variadic list of `key=value` pairs giving values of
+#         specific named properties in the writer."""
+#     writer = CreateWriter(filename, proxy, **extraArgs)
+#     if not writer:
+#         raise RuntimeError("Could not create writer for specified file or data type")
+#     writer.UpdateVTKObjects()
+#     writer.UpdatePipeline()
+#     del writer
